@@ -1,13 +1,12 @@
-import os
 from pathlib import Path
 
-from PIL import Image
+
 
 from app import app
 from flask import request, redirect, render_template, flash, session
-from . image_metadata import ImageMetaData, get_metadata_from_file
+from . image_metadata import get_metadata_from_file
 
-app.config['UPLOAD_FOLDER'] = app.config['UPLOAD_FOLDER'] = Path(__file__).parent / "static"
+app.config['UPLOAD_FOLDER'] = Path(__file__).parent / "static"
 app.config['SECRET_KEY'] = 'sdsdadds'
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -22,8 +21,9 @@ def index():
     if request.method == "POST":
         file = request.files['filename']
         filename = "image.jpg"
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], "images", filename)
-
+        file_path: Path= app.config['UPLOAD_FOLDER'] / "images" / filename
+        if not file_path.exists():
+            file_path.mkdir()
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
@@ -33,15 +33,16 @@ def index():
         try:
             file.save(file_path)
             flash("succesfully uploaded image file")
-
         except Exception as e:
             print("file save error", e)
-        imd = get_metadata_from_file(Path(file_path))
+        print("file path is: ", file_path)
+        imd = get_metadata_from_file(file_path)
         data['device'] = imd.device
         data['width'] = imd.width_px
         data['height'] = imd.height_px
         data['date taken'] = imd.datetime
-
+        data['latitude'] = imd.latitude
+        data['longitude'] = imd.longitude
         return render_template("main.html", data=data, image=filename)
     # Clear any flashed messages from the session before rendering the template
     session.pop('_flashes', None)

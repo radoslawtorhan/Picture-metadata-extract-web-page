@@ -14,6 +14,8 @@ class ImageMetaData:
         self.width_px: int = 0
         self.height_px: int = 0
         self.datetime: Optional[datetime] = None
+        self.latitude: float = 0
+        self.longitude: float = 0
 
 
 def get_metadata_from_file(path: Path) -> ImageMetaData:
@@ -38,7 +40,6 @@ def get_metadata_from_file(path: Path) -> ImageMetaData:
     data.device = f"{raw_data.get('make')} {raw_data.get('model')}"
     data.width_px = int(raw_data.get("pixel_x_dimension", 0))
     data.height_px = int(raw_data.get("pixel_y_dimension", 0))
-
     try:
         data.datetime = datetime.strptime(
             raw_data.get("datetime", ""), "%Y:%m:%d %H:%M:%S"
@@ -46,6 +47,14 @@ def get_metadata_from_file(path: Path) -> ImageMetaData:
     except:
         print("unknown datetime format!")
         data.datetime = None
+    try:
+
+        data.latitude = raw_data.get("gps_latitude", 0)
+        data.longitude = raw_data.get("gps_longitude", 0)
+    except AttributeError:
+        print('No Coordinates')
+
+
     return data
 
 
