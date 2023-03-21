@@ -21,9 +21,10 @@ def index():
     if request.method == "POST":
         file = request.files['filename']
         filename = "image.jpg"
-        file_path: Path= app.config['UPLOAD_FOLDER'] / "images" / filename
-        if not file_path.exists():
-            file_path.mkdir()
+        path: Path = app.config['UPLOAD_FOLDER'] / "images"
+        if not path.exists():
+            path.mkdir(parents=True)
+        file_path = path / filename
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
