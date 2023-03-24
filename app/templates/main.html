@@ -2,32 +2,48 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-
+    <title>Extract metadata from picture</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-
-    <form method="post" enctype="multipart/form-data">
-      <input type="file" id="myFile" name="filename">
-      <input type="submit">
-    </form>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
+    <div class="container">
+        <h1>Extract metadata from picture</h1>
+        <form method="post" enctype="multipart/form-data">
+            <div class="file-input-wrapper">
+                <input type="file" id="myFile" name="filename" required>
+                <label for="myFile">Choose a file</label>
+            </div>
+            <div class="submit-button-wrapper">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="message-list">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        {% if image %}
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='images/image.jpg') }}" alt="" class="image">
+                    <div class="rotate-buttons">
+                        <button class="rotate-button rotate-button-left" onclick="rotateImage('left')">Rotate Left</button>
+                        <button class="rotate-button rotate-button-right" onclick="rotateImage('right')">Rotate Right</button>
+                    </div>
+            </div>
+            <ul class="data-list">
+                {% for k, v in data.items() %}
+                    <li>
+                        <div class="metadata-item-key">{{ k }}</div>
+                        <div class="metadata-item-value">{{ v }}</div>
+                    </li>
+                {% endfor %}
+            </ul>
         {% endif %}
-    {% endwith %}
-    {% if image%}
-        <img src="{{ url_for('static', filename='images/image.jpg') }}"  alt="" width="{{ data.width / 3}}" height="{{ data.height / 3 }}">
-
-        <ul>
-            {% for k, v in data.items() %}
-                <li>{{ k }} - {{ v }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

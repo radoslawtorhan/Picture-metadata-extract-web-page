@@ -9,7 +9,7 @@ from . image_metadata import get_metadata_from_file
 app.config['UPLOAD_FOLDER'] = Path(__file__).parent / "static"
 app.config['SECRET_KEY'] = 'sdsdadds'
 
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'gif'}
 
 def allowed_file(filename):
     return '.' in filename and \

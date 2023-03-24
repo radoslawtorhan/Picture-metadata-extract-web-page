@@ -1,6 +1,13 @@
 venv
 .idea/
-app/static/images
+# Ignore the images folder
+app/static/images/
+
+# Do not ignore the css and js folders
+!app/static/css/
+!app/static/js/
+
+
 app/__pycache__
 
 # Byte-compiled / optimized / DLL files
